@@ -12,5 +12,5 @@ before_script:
     - docker pull hitsounds/hitcircles:${TRAVIS_BRANCH} || true
 
 script:
-    - docker build --pull --cache-from hitsounds/hitcircles:${TRAVIS_BRANCH}_${TRAVIS_CPU_ARCH} -t hitsounds/hitcircles:${TRAVIS_BRANCH}_${TRAVIS_CPU_ARCH} .
+    - docker build --no-cache -t hitsounds/hitcircles:${TRAVIS_BRANCH}_${TRAVIS_CPU_ARCH} .
     - if $TRAVIS_PULL_REQUEST; then echo "Pull request"; else docker login -u hitsounds -p $docker_hub_p; docker push hitsounds/hitcircles; fi
