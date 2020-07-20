@@ -16,6 +16,7 @@ class ytdl_downloader():
             "writethumbnail": True,
             "noplaylist": True,
             "geo_bypass":True,
+            "external_downloader":"aria2c",
             'postprocessors': [
             	{
 					'key': 'FFmpegExtractAudio',
@@ -36,6 +37,7 @@ class ytdl_downloader():
             "writethumbnail": True,
             "noplaylist": True,
             "geo_bypass":True,
+            "external_downloader":"aria2c",
             'postprocessors': [
                 {
 					'key': 'EmbedThumbnail'
@@ -75,7 +77,7 @@ class ytdl_downloader():
 
 	def compile_ytdl_options(self):
 		base = self.formats[self.format]
-		if self.format == "mp3":
+		if self.format == "av":
 			base["postprocessors"][0]["preferredquality"] = self.quality
 		if "entries" in self.info:
 			self.is_playlist = True
@@ -92,19 +94,15 @@ class ytdl_downloader():
 
 	def dl(self):
 		if not self.is_playlist and not self.finished:
-
 			with youtube_dl.YoutubeDL(self.ytdlopts) as ydl:
 				ydl.download([self.info["webpage_url"]])
-			os.rename(self.path + "/{}.{}".format(self.info["id"], self.format), self.path + "/{}.{}".format(self.info["title"].replace("/",""), self.format))
-			return self.path + "/{}.{}".format(self.info["title"].replace("/",""), self.format)
-
+                return self.path + "/{}".format(ydl.prepare_filename([self.info["webpage_url"]))
 
 		elif self.is_playlist and not self.playlist and not self.finished:
 			to_dl = self.info["entries"][0]
 			with youtube_dl.YoutubeDL(self.ytdlopts) as ydl:
 				ydl.download([to_dl["webpage_url"]])
-			os.rename(self.path + "/{}.{}".format(to_dl["id"], self.format), self.path + "/{}.{}".format(to_dl["title"].replace("/",""), self.format))
-			return self.path + "/{}.{}".format(to_dl["title"].replace("/",""), self.format)
+                return self.path + "/{}".format(ydl.prepare_filename([self.info["webpage_url"]))
 
 		elif self.is_playlist and self.playlist and not self.finished:
 			try:
