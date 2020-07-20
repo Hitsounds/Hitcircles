@@ -1,7 +1,7 @@
 FROM pypy:3.6-buster	
 
 RUN apt-get update && \	
-    apt-get install -y
+    apt-get install -y \
 		make \
 		libopus0 \
 		ffmpeg \
